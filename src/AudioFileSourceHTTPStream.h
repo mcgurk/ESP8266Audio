@@ -18,8 +18,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#if defined(ESP32) || defined(ESP8266)
-#pragma once
+#ifndef _AUDIOFILESOURCEHTTPSTREAM_H
+#define _AUDIOFILESOURCEHTTPSTREAM_H
 
 #include <Arduino.h>
 #ifdef ESP32
@@ -28,6 +28,7 @@
   #include <ESP8266HTTPClient.h>
 #endif
 #include "AudioFileSource.h"
+#include "url_parser.h"
 
 class AudioFileSourceHTTPStream : public AudioFileSource
 {
@@ -64,4 +65,3 @@ class AudioFileSourceHTTPStream : public AudioFileSource
 
 
 #endif
-
