@@ -18,8 +18,6 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#if defined(ESP32) || defined(ESP8266)
-
 #include "AudioFileSourceHTTPStream.h"
 
 AudioFileSourceHTTPStream::AudioFileSourceHTTPStream()
@@ -39,7 +37,15 @@ AudioFileSourceHTTPStream::AudioFileSourceHTTPStream(const char *url)
 bool AudioFileSourceHTTPStream::open(const char *url)
 {
   pos = 0;
-  http.begin(client, url);
+  UrlParser* urlParser = new UrlParser();
+  urlParser->parse(url);
+  String fullpath=urlParser->getPath();
+  if (urlParser->getQuery()!=NULL) {
+    fullpath=fullpath+"?"+urlParser->getQuery();
+  }
+  http.begin(client, urlParser->getHost(), urlParser->getPort(), fullpath, urlParser->isHTTPS());
+  delete urlParser;
+
   http.setReuse(true);
 #ifndef ESP32
   http.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
@@ -154,5 +160,3 @@ uint32_t AudioFileSourceHTTPStream::getPos()
 {
   return pos;
 }
-
-#endif
